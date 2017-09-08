@@ -180,7 +180,7 @@
                                                     <color key="titleColor" red="1" green="0.41688462050000002" blue="0.37928547759999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="allClearButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="j5Q-ke-dbD"/>
+                                                    <action selector="allClearButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qQT-To-0p5"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9hr-hI-EM7">
@@ -196,6 +196,9 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gtb-xX-RVW">
                                                 <rect key="frame" x="171.5" y="0.0" width="86" height="108"/>
                                                 <state key="normal" title="="/>
+                                                <connections>
+                                                    <action selector="equalButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9hx-KJ-2Hh"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="arZ-iQ-Dkk">
                                                 <rect key="frame" x="257.5" y="0.0" width="85.5" height="108"/>

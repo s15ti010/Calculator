@@ -144,12 +144,21 @@ class ViewController: UIViewController {
             case .multiplication:
                 firstValue *= secondValue
             case .division:
-                firstValue /= secondValue
+                if secondValue == 0 {
+                        label.text = "0除算Error"
+                        firstValue = 0
+                        currentOperator = .undefined
+                        return
+                } else {
+                        firstValue /= secondValue
+                }
             case .undefined:
                 firstValue = 0
-                
             }
             
+        }
+    
+    
             secondValue = 0
         
         // タップされたボタンを特定する
@@ -169,11 +178,13 @@ class ViewController: UIViewController {
         default:
             currentOperator = .undefined
             label.text = "\(firstValue) ＠ "
-        syosu = 0 //少数位初期化
-        operate = true
-            }
         }
         
+        syosu = 0 //少数位初期化
+        operate = true
+        
+    }
+    
         
         
     
@@ -194,7 +205,7 @@ class ViewController: UIViewController {
                 currentOperator = .undefined
                 return
             } else {
-                firstValue /= secondValue
+                value = firstValue / secondValue
             }
         case .undefined:
             value = firstValue
@@ -207,6 +218,7 @@ class ViewController: UIViewController {
         currentOperator = .undefined
         syosu = 0//少数位初期化    
         }
+    
     
     @IBAction func allClearButtonTapped(_ sender: UIButton) {
         firstValue = 0
