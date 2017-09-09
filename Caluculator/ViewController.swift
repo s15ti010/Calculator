@@ -233,6 +233,12 @@ class ViewController: UIViewController {
             syosu = 1
         }
     }
+    
+    
+    @IBAction func CButtonTapped(_ sender: UIButton) {
+        
+    }
+    
   
 
 }
