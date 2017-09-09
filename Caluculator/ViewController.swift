@@ -83,6 +83,7 @@ class ViewController: UIViewController {
                 firstValue = firstValue * 10 + value
             // ラベルに反映
                 label.text = "\(firstValue)"
+            
         }else if currentOperator != .undefined && syosu == 0{
             // 2つ目の数値の1桁目に追加
             secondValue = secondValue * 10 + value
@@ -99,6 +100,7 @@ class ViewController: UIViewController {
             default:
                 label.text = "\(firstValue) @ \(secondValue)" //この選択肢になることはない
             }
+            
         }else if currentOperator == .undefined && syosu > 0{
             //1つ目の数値の少数位に追加
             var aaa = 1.0
@@ -109,8 +111,9 @@ class ViewController: UIViewController {
             syosu += 1
             //ラベルに反映
             label.text = "\(firstValue)"
+            
         }else if currentOperator != .undefined && syosu > 0{
-            //2つ目の数値の少数位に追加            
+            //2つ目の数値の少数位に追加
             var aaa = 1.0
             for _ in 0...syosu - 1 {
                 aaa = aaa / 10
@@ -130,6 +133,7 @@ class ViewController: UIViewController {
             default:
                 label.text = "\(firstValue) @ \(secondValue)" //この選択肢になることはない
             }
+            
         }
     }
     
@@ -236,6 +240,14 @@ class ViewController: UIViewController {
     
     
     @IBAction func CButtonTapped(_ sender: UIButton) {
+        if currentOperator == .undefined{
+            firstValue = 0
+            label.text = "\(firstValue)"
+        }else{
+            currentOperator = .undefined
+            secondValue = 0
+            label.text  = "\(firstValue)"
+        }
         
     }
     
