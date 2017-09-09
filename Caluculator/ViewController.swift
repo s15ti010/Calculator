@@ -71,6 +71,10 @@ class ViewController: UIViewController {
             value = 8
         case "9":
             value = 9
+        case "π":
+            value = Double.pi
+        case "e":
+            value = M_E
         default:
             value = 0
         }
