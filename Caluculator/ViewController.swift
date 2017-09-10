@@ -30,8 +30,9 @@ class ViewController: UIViewController {
     
     var syosu = 0 //１以上で少数位を表す
     var operate = false //演算子が入力されているか
-    var zero = 0
-    var zerohyozi = ""
+    
+    var zero = 0 //label後の0を何個表示するか
+    var zerohyozi = ""//label後の0
     
     @IBOutlet weak var label: UILabel!
     
@@ -100,6 +101,7 @@ class ViewController: UIViewController {
                 firstValue = firstValue * 10 + value
             // ラベルに反映
                 label.text = "\(Int(firstValue))"
+                //label.text = "\(firstValue)"
             
         }else if currentOperator != .undefined && syosu == 0{
             // 2つ目の数値の1桁目に追加
@@ -107,7 +109,8 @@ class ViewController: UIViewController {
             // ラベルに反映
             switch currentOperator {
             case .addition:
-                label.text = "\(Int(firstValue)) + \(Int(secondValue))"
+                //label.text = "\(Int(firstValue)) + \(Int(secondValue))"
+                label.text = "\(firstValue) + \(secondValue)"
             case .subtraction:
                 label.text = "\(firstValue) - \(secondValue)"
             case .multiplication:
@@ -127,7 +130,15 @@ class ViewController: UIViewController {
             firstValue = firstValue + value * aaa
             syosu += 1
             //ラベルに反映
-            label.text = "\(NSString(format:"%g",firstValue))\(zerohyozi)"
+            //label.text = "\(NSString(format:"%g",firstValue))\(zerohyozi)"
+            /*
+            if (firstValue - (Int(firstValue))) == 0{
+                label.text = "\(Int(firstValue))"
+            }else{
+                
+            }
+             */
+            label.text = "\(firstValue)\(zerohyozi)"
             
         }else if currentOperator != .undefined && syosu > 0{
             //2つ目の数値の少数位に追加
@@ -264,6 +275,7 @@ class ViewController: UIViewController {
         if syosu == 0{
             syosu = 1
         }
+        label.text = label.text! + "."
     }
     
     
