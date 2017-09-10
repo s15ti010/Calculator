@@ -30,21 +30,17 @@ class ViewController: UIViewController {
     
     var syosu = 0 //１以上で少数位を表す
     var operate = false //演算子が入力されているか
-    
-    var zero = 0 //label後の0を何個表示するか
-    var zerohyozi = ""//label後の0
+    var isInput = false //入力が開始されているか
     
     @IBOutlet weak var label: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         label.backgroundColor = UIColor.darkGray
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
    
@@ -52,130 +48,49 @@ class ViewController: UIViewController {
         
         // 特定した数値を代入する変数
         var value:Double = 0
+        
         // タップされたボタンを特定する
-        /*switch sender.currentTitle! {
-        case "0":
-            value = 0
-            label.text! += "0"
-        case "1":
-            value = 1
-            label.text! += "1"
-        case "2":
-            value = 2
-            label.text! += "2"
-        case "3":
-            value = 3
-            label.text! += "3"
-        case "4":
-            value = 4
-        case "5":
-            value = 5
-        case "6":
-            value = 6
-        case "7":
-            value = 7
-        case "8":
-            value = 8
-        case "9":
-            value = 9
-        /*case "π":
-            value = Double.pi
-        case "e":
-            value = M_E*/
-        default:
-            value = 0
-        }
-        */
         value = NSString(string: sender.currentTitle!).doubleValue
-        label.text! += sender.currentTitle!
-        
-        /*if sender.currentTitle! == "0"{
-            zero += 1
-        }else{
-            zero = 0
+    
+        if isInput {
+            //すでに入力が開始されている場合
+            label.text! += sender.currentTitle!
+        } else {
+            //起動後またはAC後、初めての入力の場合
+            label.text = sender.currentTitle!
         }
-        if zero > 0{
-        for _ in 0...zero - 1{
-           zerohyozi += "0"
-        }
-        }*/
         
+        isInput = true
         operate = false
         
         // 演算子が入力される前かどうかを判別
         if currentOperator == .undefined && syosu == 0{
             // 1つ目の数値の1桁目に追加
                 firstValue = firstValue * 10 + value
-            // ラベルに反映
-                label.text = "\(Int(firstValue))"
-                //label.text = "\(firstValue)"
-            
         }else if currentOperator != .undefined && syosu == 0{
             // 2つ目の数値の1桁目に追加
             secondValue = secondValue * 10 + value
-            // ラベルに反映
-            switch currentOperator {
-            case .addition:
-                //label.text = "\(Int(firstValue)) + \(Int(secondValue))"
-                label.text = "\(firstValue) + \(secondValue)"
-            case .subtraction:
-                label.text = "\(firstValue) - \(secondValue)"
-            case .multiplication:
-                label.text = "\(firstValue) × \(secondValue)"
-            case .division:
-                label.text = "\(firstValue) ÷ \(secondValue)"
-            default:
-                label.text = "\(firstValue) @ \(secondValue)" //この選択肢になることはない
-            }
-            
         }else if currentOperator == .undefined && syosu > 0{
             //1つ目の数値の少数位に追加
-            var aaa = 1.0
+            var digit = 1.0
             for _ in 0...syosu - 1 {
-                aaa = aaa / 10
+                digit /= 10
             }
-            firstValue = firstValue + value * aaa
+            firstValue = firstValue + value * digit
             syosu += 1
-            //ラベルに反映
-            //label.text = "\(NSString(format:"%g",firstValue))\(zerohyozi)"
-            /*
-            if (firstValue - (Int(firstValue))) == 0{
-                label.text = "\(Int(firstValue))"
-            }else{
-                
-            }
-             */
-            label.text = "\(firstValue)\(zerohyozi)"
-            
         }else if currentOperator != .undefined && syosu > 0{
             //2つ目の数値の少数位に追加
-            var aaa = 1.0
+            var digit = 1.0
             for _ in 0...syosu - 1 {
-                aaa = aaa / 10
+                digit /= 10
             }
-            secondValue = secondValue + value * aaa
+            secondValue = secondValue + value * digit
             syosu += 1
-            //ラベルに反映
-            switch currentOperator {
-            case .addition:
-                label.text = "\(firstValue) + \(secondValue)\(zerohyozi)"
-            case .subtraction:
-                label.text = "\(firstValue) - \(secondValue)"
-            case .multiplication:
-                label.text = "\(firstValue) × \(secondValue)"
-            case .division:
-                label.text = "\(firstValue) ÷ \(secondValue)"
-            default:
-                label.text = "\(firstValue) @ \(secondValue)" //この選択肢になることはない
-            }
-            
         }
-        zerohyozi = ""
     }
     
+    
     @IBAction func operatorButtonTapped(_ sender: UIButton) {
-        
-        zero = 0
         
         //続けて打てるようにする
         if currentOperator != .undefined && operate == false{
@@ -208,19 +123,19 @@ class ViewController: UIViewController {
         switch sender.currentTitle! {
         case "+":
             currentOperator = .addition
-            label.text = "\(firstValue) + "
+            label.text! += " + "
         case "-":
             currentOperator = .subtraction
-            label.text = "\(firstValue) - "
+            label.text! += " - "
         case "×":
             currentOperator = .multiplication
-            label.text = "\(firstValue) × "
+            label.text! += " × "
         case "÷":
             currentOperator = .division
-            label.text = "\(firstValue) ÷ "
+            label.text! += " ÷ "
         default:
             currentOperator = .undefined
-            label.text = "\(firstValue) ＠ "
+            label.text! += " ＠ "
         }
         
         syosu = 0 //少数位初期化
@@ -233,10 +148,9 @@ class ViewController: UIViewController {
     
     @IBAction func equalButtonTapped(_ sender: UIButton) {
         
-        zero = 0
-        
         // 演算を行う
         var value:Double = 0
+        
         switch currentOperator {
         case .addition:
             value = firstValue + secondValue
@@ -246,7 +160,7 @@ class ViewController: UIViewController {
             value = firstValue * secondValue
         case .division:
             if secondValue == 0 {
-                label.text = "0除算Error"
+                label.text = "0除算Error"                     //error後に続いてしまうAC押せばok
                 firstValue = 0
                 currentOperator = .undefined
                 return
@@ -256,8 +170,10 @@ class ViewController: UIViewController {
         case .undefined:
             value = firstValue
         }
+        
         // ラベルに反映させる
-        label.text = "\(value)"
+        label.text = "\(value)"            //演算結果代入
+        
         // 演算に使用したプロパティを初期化する
         firstValue = value
         secondValue = 0
@@ -268,26 +184,26 @@ class ViewController: UIViewController {
     
     @IBAction func allClearButtonTapped(_ sender: UIButton) {
         
-        zero = 0
-        
         firstValue = 0
         secondValue = 0
         currentOperator = .undefined
         label.text = "0"
         syosu = 0
+        
+        isInput = false
     }
     
     @IBAction func syosutenButtonTapped(_ sender: UIButton) {
-        /*zero = 0*/
+       
         if syosu == 0{
             syosu = 1
+            label.text = label.text! + "."                       //ifの中に入れた
         }
-        label.text = label.text! + "."
     }
     
     
     @IBAction func CButtonTapped(_ sender: UIButton) {
-        zero = 0
+       
         if currentOperator == .undefined{
             firstValue = 0
             label.text = "\(firstValue)"
