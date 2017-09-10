@@ -53,15 +53,19 @@ class ViewController: UIViewController {
         // 特定した数値を代入する変数
         var value:Double = 0
         // タップされたボタンを特定する
-        switch sender.currentTitle! {
+        /*switch sender.currentTitle! {
         case "0":
             value = 0
+            label.text! += "0"
         case "1":
             value = 1
+            label.text! += "1"
         case "2":
             value = 2
+            label.text! += "2"
         case "3":
             value = 3
+            label.text! += "3"
         case "4":
             value = 4
         case "5":
@@ -81,8 +85,11 @@ class ViewController: UIViewController {
         default:
             value = 0
         }
+        */
+        value = NSString(string: sender.currentTitle!).doubleValue
+        label.text! += sender.currentTitle!
         
-        if sender.currentTitle! == "0"{
+        /*if sender.currentTitle! == "0"{
             zero += 1
         }else{
             zero = 0
@@ -91,7 +98,7 @@ class ViewController: UIViewController {
         for _ in 0...zero - 1{
            zerohyozi += "0"
         }
-        }
+        }*/
         
         operate = false
         
@@ -271,7 +278,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func syosutenButtonTapped(_ sender: UIButton) {
-        zero = 0
+        /*zero = 0*/
         if syosu == 0{
             syosu = 1
         }
