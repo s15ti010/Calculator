@@ -29,7 +29,9 @@ class ViewController: UIViewController {
     var currentOperator = Operator.undefined
     
     var syosu = 0 //１以上で少数位を表す
-    var operate = false //演算子
+    var operate = false //演算子が入力されているか
+    var zero = 0
+    var zerohyozi = ""
     
     @IBOutlet weak var label: UILabel!
     
@@ -71,12 +73,23 @@ class ViewController: UIViewController {
             value = 8
         case "9":
             value = 9
-        case "π":
+        /*case "π":
             value = Double.pi
         case "e":
-            value = M_E
+            value = M_E*/
         default:
             value = 0
+        }
+        
+        if sender.currentTitle! == "0"{
+            zero += 1
+        }else{
+            zero = 0
+        }
+        if zero > 0{
+        for _ in 0...zero - 1{
+           zerohyozi += "0"
+        }
         }
         
         operate = false
@@ -86,7 +99,7 @@ class ViewController: UIViewController {
             // 1つ目の数値の1桁目に追加
                 firstValue = firstValue * 10 + value
             // ラベルに反映
-                label.text = "\(firstValue)"
+                label.text = "\(Int(firstValue))"
             
         }else if currentOperator != .undefined && syosu == 0{
             // 2つ目の数値の1桁目に追加
@@ -94,7 +107,7 @@ class ViewController: UIViewController {
             // ラベルに反映
             switch currentOperator {
             case .addition:
-                label.text = "\(firstValue) + \(secondValue)"
+                label.text = "\(Int(firstValue)) + \(Int(secondValue))"
             case .subtraction:
                 label.text = "\(firstValue) - \(secondValue)"
             case .multiplication:
@@ -114,7 +127,7 @@ class ViewController: UIViewController {
             firstValue = firstValue + value * aaa
             syosu += 1
             //ラベルに反映
-            label.text = "\(firstValue)"
+            label.text = "\(NSString(format:"%g",firstValue))\(zerohyozi)"
             
         }else if currentOperator != .undefined && syosu > 0{
             //2つ目の数値の少数位に追加
@@ -127,7 +140,7 @@ class ViewController: UIViewController {
             //ラベルに反映
             switch currentOperator {
             case .addition:
-                label.text = "\(firstValue) + \(secondValue)"
+                label.text = "\(firstValue) + \(secondValue)\(zerohyozi)"
             case .subtraction:
                 label.text = "\(firstValue) - \(secondValue)"
             case .multiplication:
@@ -139,9 +152,13 @@ class ViewController: UIViewController {
             }
             
         }
+        zerohyozi = ""
     }
     
     @IBAction func operatorButtonTapped(_ sender: UIButton) {
+        
+        zero = 0
+        
         //続けて打てるようにする
         if currentOperator != .undefined && operate == false{
             switch currentOperator{
@@ -197,6 +214,9 @@ class ViewController: UIViewController {
         
     
     @IBAction func equalButtonTapped(_ sender: UIButton) {
+        
+        zero = 0
+        
         // 演算を行う
         var value:Double = 0
         switch currentOperator {
@@ -229,6 +249,9 @@ class ViewController: UIViewController {
     
     
     @IBAction func allClearButtonTapped(_ sender: UIButton) {
+        
+        zero = 0
+        
         firstValue = 0
         secondValue = 0
         currentOperator = .undefined
@@ -237,6 +260,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func syosutenButtonTapped(_ sender: UIButton) {
+        zero = 0
         if syosu == 0{
             syosu = 1
         }
@@ -244,6 +268,7 @@ class ViewController: UIViewController {
     
     
     @IBAction func CButtonTapped(_ sender: UIButton) {
+        zero = 0
         if currentOperator == .undefined{
             firstValue = 0
             label.text = "\(firstValue)"
