@@ -4,7 +4,8 @@
 //
 //  Created by mizuho on 2017/09/06.
 //  Copyright © 2017年 mizuho. All rights reserved.
-//デザイン、小数点計算、二回以上の計算、＝後の数値残す,0徐算エラー
+//
+// 二回以上の計算、＝後の数値残す, 0徐算エラー, labelはStringやDouble
 
 import UIKit
 
@@ -31,12 +32,17 @@ class ViewController: UIViewController {
     var syosu = 0 //１以上で少数位を表す
     var operate = false //演算子が入力されているか
     var isInput = false //入力が開始されているか
+    var error = false //errorがあるか
+    var syosu1 = 0
+//    var clear = false 
     
     @IBOutlet weak var label: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        label.backgroundColor = UIColor.darkGray
+        //C.layer.borderWidth=2.0
+        label.layer.cornerRadius = 10
+        label.layer.masksToBounds = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,22 +51,28 @@ class ViewController: UIViewController {
 
    
     @IBAction func numberButtonTapped(_ sender: UIButton) {
+    
+        if error == true{
+            label.text = ""
+            error = false
+        }
         
         // 特定した数値を代入する変数
         var value:Double = 0
         
-        // タップされたボタンを特定する
+        // タップされたボタンを特定する(String型をDouble型に変換して代入)
         value = NSString(string: sender.currentTitle!).doubleValue
     
         if isInput {
             //すでに入力が開始されている場合
             label.text! += sender.currentTitle!
         } else {
-            //起動後またはAC後、初めての入力の場合
+            //起動後またはAC後、初めての入力の場\
             label.text = sender.currentTitle!
         }
         
         isInput = true
+        
         operate = false
         
         // 演算子が入力される前かどうかを判別
@@ -92,6 +104,11 @@ class ViewController: UIViewController {
     
     @IBAction func operatorButtonTapped(_ sender: UIButton) {
         
+        if error == true{
+            label.text = "0"
+            error = false
+        }
+        
         //続けて打てるようにする
         if currentOperator != .undefined && operate == false{
             switch currentOperator{
@@ -103,10 +120,9 @@ class ViewController: UIViewController {
                 firstValue *= secondValue
             case .division:
                 if secondValue == 0 {
-                        label.text = "0除算Error"
-                        firstValue = 0
-                        currentOperator = .undefined
-                        return
+                        error = true
+                        allClear()
+                        label.text = "0徐算Error"
                 } else {
                         firstValue /= secondValue
                 }
@@ -119,23 +135,49 @@ class ViewController: UIViewController {
     
             secondValue = 0
         
+
+        
         // タップされたボタンを特定する
-        switch sender.currentTitle! {
-        case "+":
-            currentOperator = .addition
-            label.text! += " + "
-        case "-":
-            currentOperator = .subtraction
-            label.text! += " - "
-        case "×":
-            currentOperator = .multiplication
-            label.text! += " × "
-        case "÷":
-            currentOperator = .division
-            label.text! += " ÷ "
-        default:
-            currentOperator = .undefined
-            label.text! += " ＠ "
+        if currentOperator == .undefined {
+            switch sender.currentTitle! {
+            case "+":
+                currentOperator = .addition
+                label.text! += " + "
+            case "-":
+                currentOperator = .subtraction
+                label.text! += " - "
+            case "×":
+                currentOperator = .multiplication
+                label.text! += " × "
+            case "÷":
+                currentOperator = .division
+                label.text! += " ÷ "
+            default:
+                currentOperator = .undefined
+                label.text! += " ＠ "
+            }
+            syosu1 = syosu
+        }
+        else {
+            
+            switch sender.currentTitle! {
+            case "+":
+                currentOperator = .addition
+                label.text! = "\(NSString(format: "%g",firstValue)) + "
+            case "-":
+                currentOperator = .subtraction
+                label.text! = "\(NSString(format: "%g",firstValue)) - "
+            case "×":
+                currentOperator = .multiplication
+                label.text! = "\(NSString(format: "%g",firstValue)) × "
+            case "÷":
+                currentOperator = .division
+                label.text! = "\(NSString(format: "%g",firstValue)) ÷ "
+            default:
+                currentOperator = .undefined
+                label.text! += " ＠ "
+            }
+            
         }
         
         syosu = 0 //少数位初期化
@@ -147,6 +189,14 @@ class ViewController: UIViewController {
         
     
     @IBAction func equalButtonTapped(_ sender: UIButton) {
+        
+        
+        
+        if error == true{
+            label.text = ""
+            error = false
+            return
+        }
         
         // 演算を行う
         var value:Double = 0
@@ -160,9 +210,9 @@ class ViewController: UIViewController {
             value = firstValue * secondValue
         case .division:
             if secondValue == 0 {
-                label.text = "0除算Error"                     //error後に続いてしまうAC押せばok
-                firstValue = 0
-                currentOperator = .undefined
+                error = true
+                allClear()
+                label.text = "0除算Error"     //AC押せばok
                 return
             } else {
                 value = firstValue / secondValue
@@ -172,13 +222,16 @@ class ViewController: UIViewController {
         }
         
         // ラベルに反映させる
-        label.text = "\(value)"            //演算結果代入
+        //label.text = "\(NSString(format: "%g",value))" //演算結果代入
+        label.text = "\(value)"
         
         // 演算に使用したプロパティを初期化する
         firstValue = value
         secondValue = 0
         currentOperator = .undefined
-        syosu = 0//少数位初期化    
+        syosu = 0//少数位初期化  
+        syosu1 = 0
+//        error = true
         }
     
     
@@ -193,25 +246,51 @@ class ViewController: UIViewController {
         isInput = false
     }
     
+    func allClear(){
+        
+        firstValue = 0
+        secondValue = 0
+        currentOperator = .undefined
+        label.text = "0"
+        syosu = 0
+    }
+    
     @IBAction func syosutenButtonTapped(_ sender: UIButton) {
+        if isInput == false{
+            return
+        }
+        
+        if error == true{
+            label.text = "0"
+            error = false
+        }
        
         if syosu == 0{
             syosu = 1
-            label.text = label.text! + "."                       //ifの中に入れた
+            label.text = label.text! + "."
         }
     }
     
     
     @IBAction func CButtonTapped(_ sender: UIButton) {
+        
+        if error == true{
+            label.text = ""
+            error = false
+        }
        
         if currentOperator == .undefined{
             firstValue = 0
-            label.text = "\(firstValue)"
+            label.text = "0"
+            isInput = false
+            syosu = 0
         }else{
             currentOperator = .undefined
             secondValue = 0
-            label.text  = "\(firstValue)"
-        }
+            label.text  = "\(NSString(format: "%g",firstValue))"
+            syosu = syosu1
+            
+                    }
         
     }
     
